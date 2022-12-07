@@ -5,8 +5,9 @@ function getComputerChoice(array) {
     return random;
 }
 
-function rockPaperScissors(playerSelection, computerSelection = getComputerChoice(choices)) {
+function rockPaperScissors(playerSelection) {
     let valid = true;
+    const computerSelection = getComputerChoice(choices);
     switch(playerSelection) {
         case undefined:
             valid = false;
@@ -87,7 +88,7 @@ function game() {
             computerScore++;
             console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
         } else {
-            alert("Tie");
+            alert(`Tie in Round ${i + 1}`);
             console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
         }
     }
