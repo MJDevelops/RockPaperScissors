@@ -1,5 +1,25 @@
 const choices = ["rock", "paper", "scissors"];
 
+const imgdiv = document.querySelector('.imgdiv');
+const imgbtns = imgdiv.querySelectorAll('button');
+
+
+imgbtns.forEach((button) => {
+    button.addEventListener('click', () => {
+        let choice = button.getAttribute('class');
+        button.disabled = true;
+        if (choice === "rockopt") {
+            game("rock");
+        } else if (choice === "paperopt") {
+            game("paper");
+        } else {
+            game("scissors");
+        } setTimeout(function() {
+            button.disabled = false;
+        }, 2250);
+    });
+});
+
 function getComputerChoice(array) {
     const random = array[Math.floor(Math.random() * array.length)];
     return random;
@@ -61,43 +81,35 @@ function rockPaperScissors(playerSelection) {
     }
 }
 
-function game() {
+function game(selection) {
     let playerScore = 0;
     let computerScore = 0;
+    let winnerMes = rockPaperScissors(selection);
 
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = prompt("Enter Rock, Paper or Scissors: ");
-        let winnerMes = rockPaperScissors(playerSelection);
-        if (!winnerMes) {
-            do {
-                alert("Invalid input, please try again.");
-                playerSelection = prompt("Enter Rock, Paper or Scissors: ");
-                winnerMes = rockPaperScissors(playerSelection);
-            }
-            while (!winnerMes);
-        }
+    const div = document.querySelector('.maindiv');
+    const winnerP = document.createElement('p');
 
-        winnerMes = winnerMes.toLowerCase();
+    winnerP.classList.add('newp');
+    winnerP.setAttribute('style', 'color: black; margin: 15px; align-self: center')
+    
 
-        if (winnerMes.includes("you win!")) {
-            alert(`Player wins Round ${i + 1}.`)
-            playerScore++
-            console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
-        } else if(winnerMes.includes("you lose!")) {
-            alert(`Computer wins Round ${i + 1} `)
-            computerScore++;
-            console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
-        } else {
-            alert(`Tie in Round ${i + 1}`);
-            console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
-        }
-    }
+    winnerMes = winnerMes.toLowerCase();
 
-    if (playerScore > computerScore) {
-        return `You win with a score of ${playerScore}!`;
-    } else if (computerScore > playerScore) {
-        return `You lose with a score of ${playerScore}!`;
+    if (winnerMes.includes("you win!")) {
+        winnerP.textContent = `Player wins!`;
+        playerScore++;
+        console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
+    } else if(winnerMes.includes("you lose!")) {
+        winnerP.textContent = `Computer wins!`;
+        computerScore++;
+        console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
     } else {
-        return "It's a tie!";
+        winnerP.textContent = `Tie!`;
+        console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
     }
+
+    div.appendChild(winnerP);
+    setTimeout(function() {
+        winnerP.remove();
+    }, 2250);
 }
