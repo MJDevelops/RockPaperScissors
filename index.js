@@ -1,24 +1,64 @@
 const choices = ["rock", "paper", "scissors"];
 
+
 const imgdiv = document.querySelector('.imgdiv');
+const maindiv = document.querySelector('.maindiv');
+const playerresult = document.querySelector('.playerresult');
+const compresult = document.querySelector('.compresult')
 const imgbtns = imgdiv.querySelectorAll('button');
+const replay = document.createElement('button');
+const winner = document.createElement('p');
+
+let playerScore = 0;
+let computerScore = 0;
+let round = 0;
 
 
 imgbtns.forEach((button) => {
     button.addEventListener('click', () => {
+        round++;
         let choice = button.getAttribute('class');
-        button.disabled = true;
-        if (choice === "rockopt") {
-            game("rock");
-        } else if (choice === "paperopt") {
-            game("paper");
+        if (round !== 5) {
+            imgbtns.forEach((button) => {
+                button.disabled = false;
+            }); 
+            if (choice === "rockopt") {
+                playRound("rock");
+            } else if (choice === "paperopt") {
+                playRound("paper");
+            } else {
+                playRound("scissors");
+            }
         } else {
-            game("scissors");
-        } setTimeout(function() {
-            button.disabled = false;
-        }, 2250);
+            imgbtns.forEach((button) => {
+                button.disabled = true;
+            });
+            if (playerScore > computerScore) {
+                winner.textContent = "Player wins!";
+            } else if (playerScore < computerScore) {
+                winner.textContent = "Computer wins!";
+            } else {
+                winner.textContent = "It's a tie!";
+            } winner.setAttribute('style', 'align-self: center; font-size: 30px;'); 
+            replay.addEventListener('click', () => {
+                playerScore = 0;
+                computerScore = 0;
+                round = 0;
+                imgbtns.forEach((button) => {
+                    button.disabled = false;
+                }); replay.remove();
+                winner.remove();
+                playerresult.textContent = `Computer Score: ${computerScore}`;
+                compresult.textContent = `Player Score: ${playerScore}`;
+            });
+            replay.textContent = "Replay";
+            replay.setAttribute('style', 'color: white; padding: 10px; font-size: 20px; align-self: center; margin-bottom: 10px; border-radius: 5px; background-color: black');
+            maindiv.appendChild(winner);
+            maindiv.appendChild(replay);
+        }
     });
 });
+
 
 function getComputerChoice(array) {
     const random = array[Math.floor(Math.random() * array.length)];
@@ -81,13 +121,14 @@ function rockPaperScissors(playerSelection) {
     }
 }
 
-function game(selection) {
-    let playerScore = 0;
-    let computerScore = 0;
+function playRound(selection) {
     let winnerMes = rockPaperScissors(selection);
 
     const div = document.querySelector('.maindiv');
     const winnerP = document.createElement('p');
+    const resultH1 = document.querySelector('.resultcont h1');
+    const resultPlayer = document.querySelector('.playerresult');
+    const resultComp = document.querySelector('.compresult');
 
     winnerP.classList.add('newp');
     winnerP.setAttribute('style', 'color: black; margin: 15px; align-self: center')
@@ -96,17 +137,22 @@ function game(selection) {
     winnerMes = winnerMes.toLowerCase();
 
     if (winnerMes.includes("you win!")) {
-        winnerP.textContent = `Player wins!`;
+        winnerP.textContent = `Player wins round!`;
         playerScore++;
         console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
     } else if(winnerMes.includes("you lose!")) {
-        winnerP.textContent = `Computer wins!`;
+        winnerP.textContent = `Computer wins round!`;
         computerScore++;
-        console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
+        console.log(`Player Score: ${playerScore}Computer Score: ${computerScore}\n`);
     } else {
-        winnerP.textContent = `Tie!`;
-        console.log(`Player Score: ${playerScore}\nComputer Score: ${computerScore}\n`);
+        winnerP.textContent = `Tie in round!`;
+        console.log(`Player Score: ${playerScore}Computer Score: ${computerScore}\n`);
     }
+
+    resultPlayer.textContent = `Player Score: ${playerScore}`;
+    resultComp.textContent = `Computer Score: ${computerScore}`;
+    resultH1.textContent = 'Result:'
+        
 
     div.appendChild(winnerP);
     setTimeout(function() {
